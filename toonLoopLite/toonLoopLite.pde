@@ -1,4 +1,4 @@
-  /**
+/**
  * Toonloop :: Live Stop Motion Animation Tool. 
  * @version Toonloop Lite version 0.15 Cleaned up.
  * @author Alexandre Quessy <alexandre@quessy.net>
@@ -36,8 +36,9 @@ Capture cam;
 
 int LOOP_MAX_NUM_FRAME = 500;
 int NUM_SEQUENCES = 10; 
-int LOOP_WIDTH = 640; //1280; //1024
-int LOOP_HEIGHT = 480; // 720;  //768
+int LOOP_WIDTH = 800; //1280; //1024
+int LOOP_HEIGHT = 600; // 720;  //768
+
 int FRAME_RATE = 8;
 float WINDOW_SIZE_RATIO = 1.5; // 0.5625 ? 
 int SAVED_MESSAGE_DURATION = 30;
@@ -61,8 +62,11 @@ int toonloopStatus = 0; //0 = toonloop; 1 = info; 2 = save
 
 PGraphics pg;
 
+PImage ghost;
+boolean ghostEnabled=false;
+
 // trying to add filtered export images
-PImage pg = createImage(66, 66, RGB);
+PImage img = createImage(66, 66, RGB);
 PImage infoPage, savePage;
 boolean showInfoFlag, saveVideoFlag;
 long showInfoTimer = 3000; //milliseconds
@@ -77,6 +81,7 @@ void setup()
   //  size(1280, 1000);
   size(LOOP_WIDTH*2, LOOP_HEIGHT*2); 
   pg = createGraphics(LOOP_WIDTH, LOOP_HEIGHT);
+
   infoPage = loadImage("info.jpg"); 
   savePage = loadImage("save.jpg");
 
@@ -88,18 +93,19 @@ void setup()
   // end of Mac or Windows 
   // UNCOMMENT If on GNU/Linux:
 
-  cam = new Capture(this, LOOP_WIDTH, LOOP_HEIGHT, "/dev/video0");
+  cam = new Capture(this, LOOP_WIDTH, LOOP_HEIGHT);
   cam.start();
-  println("Cannot list cameras on GNU/Linux");
+  //println("Cannot list cameras on GNU/Linux");
 
   // end of GNU/Linux
   for (int i = 0; i < sequences.length; i++) {
     sequences[i] = new ToonSequence();
   }
   font = loadFont("CourierNewPSMT-24.vlw");
-  println("Welcome to ToonLoop ! The Live Stop Motion Animation Tool.");
-  println(")c( Alexandre Quessy 2008");
-  println("http://alexandre.quessy.net");
+  //println("Welcome to ToonLoop ! The Live Stop Motion Animation Tool.");
+  //println(")c( Alexandre Quessy 2008");
+  //println("http://alexandre.quessy.net");
+  ghost=createImage(LOOP_WIDTH, LOOP_HEIGHT, RGB);
 }
 
 void draw() 
@@ -113,8 +119,7 @@ void draw()
     if (millis() - timer > showInfoTimer) {
       showInfoFlag = false;
     }
-  } 
-  else {  
+  } else {  
 
     if (cam.available() == true) 
     {
@@ -125,11 +130,15 @@ void draw()
     // display image
     //tint(255, 0, 255);
     //image(cam, 0, 150, 1065, 750); //1371 1.428571429 
-    
-    
+
+
     //sequences[currentSeq].tintFrame();  <--- an attempt to add an effect to the loop. Try to uncomment and laugh
     image(cam, 0, 150, LOOP_WIDTH, LOOP_HEIGHT); //1371 1.428571429 
 
+    if (ghost!=null) {
+     tint(255, 126);
+      image(ghost, 0, 150, LOOP_WIDTH, LOOP_HEIGHT);
+    }
 
     // y is the height of the text for frames and sequence information
     // int y = (int)(LOOP_HEIGHT*1.6*WINDOW_SIZE_RATIO);
@@ -147,27 +156,25 @@ void draw()
 
     if (sequences[currentSeq].captureFrameNum > 0) 
     { 
-      
-      
 
       //image(sequences[currentSeq].images[sequences[currentSeq].playFrameNum], width/2, 150, 1075, 750);
       image(sequences[currentSeq].images[sequences[currentSeq].playFrameNum], width/2, 150, LOOP_WIDTH, LOOP_HEIGHT);
-
+      //println(sequences[currentSeq].playFrameNum);
       // keep the loop going increasing playFrameNum by one
       sequences[currentSeq].loopFrame();
     } 
 
 
-//    // SAVED message
-//    textFont(font, (int)(TEXT_FONT_SIZE*SAVED_MESS_SIZE_RATIO));
-//    if (is_displaying_saved_message > 0)
-//    {
-//      is_displaying_saved_message--; // decrement duration
-//      int x = (int)((LOOP_WIDTH/4)*WINDOW_SIZE_RATIO); 
-//      int the_y = (int)(LOOP_HEIGHT*1.7*WINDOW_SIZE_RATIO);
-//      fill(255, 0, 0, 255);
-//      text("Saved to "+saved_file_name + ". ("+LOOP_WIDTH +"x"+ LOOP_HEIGHT+")", x, the_y);
-//    }
+    //    // SAVED message
+    //    textFont(font, (int)(TEXT_FONT_SIZE*SAVED_MESS_SIZE_RATIO));
+    //    if (is_displaying_saved_message > 0)
+    //    {
+    //      is_displaying_saved_message--; // decrement duration
+    //      int x = (int)((LOOP_WIDTH/4)*WINDOW_SIZE_RATIO); 
+    //      int the_y = (int)(LOOP_HEIGHT*1.7*WINDOW_SIZE_RATIO);
+    //      fill(255, 0, 0, 255);
+    //      text("Saved to "+saved_file_name + ". ("+LOOP_WIDTH +"x"+ LOOP_HEIGHT+")", x, the_y);
+    //    }
   }
 }
 
@@ -214,23 +221,22 @@ void toggleAutoRecording()
   if (is_auto_recording ==0) 
   {
     is_auto_recording = 1;
-  } 
-  else {
+  } else {
     is_auto_recording = 0;
   }
 }
 
-// New Save video by Pitusso aka Mirco Piccin 
+// New "Save Video" by Pitusso aka Mirco Piccin 
 
 void saveMovie() {
   //lock screen
   background(0);
   //image(savePage, 0, 0, LOOP_WIDTH, LOOP_HEIGHT);
-  
+
   // notifying recording by stupid red dot
   smooth();
   fill(255, 0, 0);
-  ellipse(40,40, 40,40);
+  ellipse(40, 40, 40, 40);
 
   String pic_name;
   int capturedFrames = sequences[currentSeq].captureFrameNum;
@@ -261,8 +267,8 @@ void saveMovie() {
       pg.image(sequences[currentSeq].images[i], 0, 0, LOOP_WIDTH, LOOP_HEIGHT); 
       //saveFrame(pic_name);
       pg.save(pic_name);
-      saveFrame();
-    //  is_displaying_saved_message++;
+      // saveFrame();
+      //  is_displaying_saved_message++;
     }
 
     /*
@@ -291,6 +297,13 @@ void showInfo() {
   delay(showTime);
 }
 
+void newGhost() {
+  
+  ghost.copy(cam, 0, 0, LOOP_WIDTH, LOOP_HEIGHT, 0, 0, LOOP_WIDTH, LOOP_HEIGHT);
+//(  image(ghost,0,0);
+}
+
 //boolean sketchFullScreen() {
 //  return true;
 //}
+
