@@ -51,6 +51,10 @@ void keyPressed()
   case 'e': // EFFECTS, TINT
     sequences[currentSeq].tintFrame();
     break;
+
+  case 'g': // EFFECTS, TINT
+    newGhost();
+    break;
     
   case 'q': // QUIT APPLICATION
     if (ENABLE_QUIT) {

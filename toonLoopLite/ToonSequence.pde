@@ -43,7 +43,7 @@ class ToonSequence
         println("!");
      // } else {
         pg.beginDraw();
-        pg.tint(255, 0, 0);
+        //pg.tint(255, 0, 0);
         // We use new here, because it was not possible to overwrite an existing image.
         pg.image(cam, 0, 0, LOOP_WIDTH, LOOP_HEIGHT);
         images[captureFrameNum] = pg;
