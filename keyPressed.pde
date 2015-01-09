@@ -1,7 +1,5 @@
 void keyPressed() 
 {
-  println(key);
-
   switch (keyCode)
   {
   case UP:
@@ -18,17 +16,14 @@ void keyPressed()
 
   switch (key)
   {
-
   case ' ': // ADD FRAME
     if (is_auto_recording == 0) {
-      audioSave.play();
       sequences[currentSeq].addFrame();
-      audioSave.rewind();
     }
     break;
-  case 'o':
-    saveVideo(currentSeq);
-    break;
+//  case 'o':
+//    saveVideo(currentSeq);
+//    break;
   case 'p': // SETTINGS
     cameraPreferences();
     break;
@@ -41,9 +36,9 @@ void keyPressed()
     }
     break;   
   case 'i':
-    timer = millis();
-    showInfoFlag = true; 
-    break;
+      timer = millis();
+      showInfoFlag = true; 
+      break;
   case 'c':    
   case BACKSPACE: // DELETE ONE FRAME
   case DELETE:
@@ -52,31 +47,30 @@ void keyPressed()
   case 'a': // AUTO RECORD
     toggleAutoRecording();
     break;
+    
+  case 'e': // EFFECTS, TINT
+    sequences[currentSeq].tintFrame();
+    break;
+    
   case 'q': // QUIT APPLICATION
     if (ENABLE_QUIT) {
       exit();
     }
     break;
   case '0':
-  //03124
     switchToSequence(0);
-    sfondo = color(rosso);
     break;
   case '1':
     switchToSequence(1);
-     sfondo = color(verde);
     break;
   case '2':
     switchToSequence(2);
-     sfondo = color(arancione);
     break;
   case '3':
     switchToSequence(3);
-     sfondo = color(blue);
     break;
   case '4':
     switchToSequence(4);
-     sfondo = color(nero);
     break;
   case '5':
     switchToSequence(5);
@@ -95,4 +89,3 @@ void keyPressed()
     break;
   }
 }
-

@@ -34,12 +34,17 @@ class ToonSequence
   {
     if (captureFrameNum < LOOP_MAX_NUM_FRAME) 
     {
+      //tint(0, 153, 204);
       // We use new here, because it was not possible to overwrite an existing image.
       images[captureFrameNum] = new PImage(LOOP_WIDTH, LOOP_HEIGHT);
-      images[captureFrameNum].copy(cam, 0, 0, LOOP_WIDTH, LOOP_HEIGHT, 0, 0, LOOP_WIDTH, LOOP_HEIGHT);
+      //images[captureFrameNum].copy(cam, 0, 0, LOOP_WIDTH, LOOP_HEIGHT, 0, 0, LOOP_WIDTH, LOOP_HEIGHT);
+
+      //images[captureFrameNum].copy(cam, 0, 0, LOOP_WIDTH, LOOP_HEIGHT, 0, 0, LOOP_WIDTH, LOOP_HEIGHT);
+      images[captureFrameNum].blend(cam, 0, 0, LOOP_WIDTH, LOOP_HEIGHT, 0, 0, LOOP_WIDTH, LOOP_HEIGHT, ADD);
+      //images[captureFrameNum].
 
       captureFrameNum++;
-      isFlashing = 1;
+      //isFlashing = 1;
     } 
     else {
       println("Reached max number of frames : " + LOOP_MAX_NUM_FRAME);
@@ -55,18 +60,20 @@ class ToonSequence
       playFrameNum = 0;
     }
   }
-    void record() 
+  void tintFrame()
   {
-    if (playFrameNum < captureFrameNum - 1) 
+
+    if (is_tinting_the_image ==0) 
     {
-      playFrameNum++;
-      saveFrame("ciao#####.jpg");
+      is_tinting_the_image = 1;
+      println("tint");
+      tint(0, 153, 204);
     } 
     else {
-      playFrameNum = 0;
+      is_tinting_the_image = 0;
+      noTint();
+      
     }
   }
-  
-  
 }
 
