@@ -1,4 +1,4 @@
-  /**
+/**
  * Toonloop :: Live Stop Motion Animation Tool. 
  * @version Toonloop Lite version 0.15 Cleaned up.
  * @author Alexandre Quessy <alexandre@quessy.net>
@@ -62,7 +62,7 @@ int toonloopStatus = 0; //0 = toonloop; 1 = info; 2 = save
 PGraphics pg;
 
 // trying to add filtered export images
-PImage pg = createImage(66, 66, RGB);
+PImage img = createImage(66, 66, RGB);
 PImage infoPage, savePage;
 boolean showInfoFlag, saveVideoFlag;
 long showInfoTimer = 3000; //milliseconds
@@ -88,18 +88,18 @@ void setup()
   // end of Mac or Windows 
   // UNCOMMENT If on GNU/Linux:
 
-  cam = new Capture(this, LOOP_WIDTH, LOOP_HEIGHT, "/dev/video0");
+  cam = new Capture(this, LOOP_WIDTH, LOOP_HEIGHT);
   cam.start();
-  println("Cannot list cameras on GNU/Linux");
+  //println("Cannot list cameras on GNU/Linux");
 
   // end of GNU/Linux
   for (int i = 0; i < sequences.length; i++) {
     sequences[i] = new ToonSequence();
   }
   font = loadFont("CourierNewPSMT-24.vlw");
-  println("Welcome to ToonLoop ! The Live Stop Motion Animation Tool.");
-  println(")c( Alexandre Quessy 2008");
-  println("http://alexandre.quessy.net");
+  //println("Welcome to ToonLoop ! The Live Stop Motion Animation Tool.");
+  //println(")c( Alexandre Quessy 2008");
+  //println("http://alexandre.quessy.net");
 }
 
 void draw() 
@@ -113,8 +113,7 @@ void draw()
     if (millis() - timer > showInfoTimer) {
       showInfoFlag = false;
     }
-  } 
-  else {  
+  } else {  
 
     if (cam.available() == true) 
     {
@@ -125,8 +124,8 @@ void draw()
     // display image
     //tint(255, 0, 255);
     //image(cam, 0, 150, 1065, 750); //1371 1.428571429 
-    
-    
+
+
     //sequences[currentSeq].tintFrame();  <--- an attempt to add an effect to the loop. Try to uncomment and laugh
     image(cam, 0, 150, LOOP_WIDTH, LOOP_HEIGHT); //1371 1.428571429 
 
@@ -147,27 +146,25 @@ void draw()
 
     if (sequences[currentSeq].captureFrameNum > 0) 
     { 
-      
-      
 
       //image(sequences[currentSeq].images[sequences[currentSeq].playFrameNum], width/2, 150, 1075, 750);
       image(sequences[currentSeq].images[sequences[currentSeq].playFrameNum], width/2, 150, LOOP_WIDTH, LOOP_HEIGHT);
-
+      println(sequences[currentSeq].playFrameNum);
       // keep the loop going increasing playFrameNum by one
       sequences[currentSeq].loopFrame();
     } 
 
 
-//    // SAVED message
-//    textFont(font, (int)(TEXT_FONT_SIZE*SAVED_MESS_SIZE_RATIO));
-//    if (is_displaying_saved_message > 0)
-//    {
-//      is_displaying_saved_message--; // decrement duration
-//      int x = (int)((LOOP_WIDTH/4)*WINDOW_SIZE_RATIO); 
-//      int the_y = (int)(LOOP_HEIGHT*1.7*WINDOW_SIZE_RATIO);
-//      fill(255, 0, 0, 255);
-//      text("Saved to "+saved_file_name + ". ("+LOOP_WIDTH +"x"+ LOOP_HEIGHT+")", x, the_y);
-//    }
+    //    // SAVED message
+    //    textFont(font, (int)(TEXT_FONT_SIZE*SAVED_MESS_SIZE_RATIO));
+    //    if (is_displaying_saved_message > 0)
+    //    {
+    //      is_displaying_saved_message--; // decrement duration
+    //      int x = (int)((LOOP_WIDTH/4)*WINDOW_SIZE_RATIO); 
+    //      int the_y = (int)(LOOP_HEIGHT*1.7*WINDOW_SIZE_RATIO);
+    //      fill(255, 0, 0, 255);
+    //      text("Saved to "+saved_file_name + ". ("+LOOP_WIDTH +"x"+ LOOP_HEIGHT+")", x, the_y);
+    //    }
   }
 }
 
@@ -214,23 +211,22 @@ void toggleAutoRecording()
   if (is_auto_recording ==0) 
   {
     is_auto_recording = 1;
-  } 
-  else {
+  } else {
     is_auto_recording = 0;
   }
 }
 
-// New Save video by Pitusso aka Mirco Piccin 
+// New "Save Video" by Pitusso aka Mirco Piccin 
 
 void saveMovie() {
   //lock screen
   background(0);
   //image(savePage, 0, 0, LOOP_WIDTH, LOOP_HEIGHT);
-  
+
   // notifying recording by stupid red dot
   smooth();
   fill(255, 0, 0);
-  ellipse(40,40, 40,40);
+  ellipse(40, 40, 40, 40);
 
   String pic_name;
   int capturedFrames = sequences[currentSeq].captureFrameNum;
@@ -261,8 +257,8 @@ void saveMovie() {
       pg.image(sequences[currentSeq].images[i], 0, 0, LOOP_WIDTH, LOOP_HEIGHT); 
       //saveFrame(pic_name);
       pg.save(pic_name);
-      saveFrame();
-    //  is_displaying_saved_message++;
+     // saveFrame();
+      //  is_displaying_saved_message++;
     }
 
     /*
