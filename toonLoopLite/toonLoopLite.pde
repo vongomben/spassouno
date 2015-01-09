@@ -36,8 +36,8 @@ Capture cam;
 
 int LOOP_MAX_NUM_FRAME = 500;
 int NUM_SEQUENCES = 10; 
-int LOOP_WIDTH = 640; //1280; //1024
-int LOOP_HEIGHT = 480; // 720;  //768
+int LOOP_WIDTH = 1280; //1280; //1024
+int LOOP_HEIGHT = 720; // 720;  //768
 
 int FRAME_RATE = 8;
 float WINDOW_SIZE_RATIO = 1.5; // 0.5625 ? 
