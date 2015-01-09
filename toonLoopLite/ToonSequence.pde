@@ -84,7 +84,7 @@ class ToonSequence
 
     //pg.image(pg, 0, 0, LOOP_WIDTH, LOOP_HEIGHT); 
     //saveFrame(pic_name);
-     images[captureFrameNum].save("export/"pic_name);
+     images[captureFrameNum].save("export/"+pic_name);
     captureFrameNum++;
   }
   void loopFrame() 
