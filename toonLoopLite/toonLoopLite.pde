@@ -71,7 +71,7 @@ int toonloopStatus = 0; //0 = toonloop; 1 = info; 2 = save
 
 PGraphics pg;
 
-PImage ghost;
+PGraphics ghost;
 boolean ghostEnabled=false;
 
 // trying to add filtered export images
@@ -84,12 +84,8 @@ long timer = 0;
 
 void setup() 
 {
-  //size((int)(LOOP_WIDTH*2*WINDOW_SIZE_RATIO), (int)(LOOP_HEIGHT*2*WINDOW_SIZE_RATIO), P3D);
-  //size((int)(LOOP_WIDTH*2*WINDOW_SIZE_RATIO), (int)(LOOP_HEIGHT*2*WINDOW_SIZE_RATIO), OPENGL); 
+  fullScreen();
 
-  //  size(1280, 1000);
-  //size(LOOP_WIDTH*2, LOOP_HEIGHT*2); 
-  size(1600, 1200);
   pg = createGraphics(LOOP_WIDTH, LOOP_HEIGHT);
 
   infoPage = loadImage("info.jpg"); 
@@ -107,8 +103,8 @@ void setup()
   //cam.start();
   //println("Cannot list cameras on GNU/Linux");
 
-String[] cameras = Capture.list();
-  
+  String[] cameras = Capture.list();
+
   if (cameras.length == 0) {
     println("There are no cameras available for capture.");
     exit();
@@ -117,11 +113,11 @@ String[] cameras = Capture.list();
     for (int i = 0; i < cameras.length; i++) {
       println(cameras[i]);
     }
-    
+
     // The camera can be initialized directly using an 
     // element from the array returned by list():
     cam = new Capture(this, cameras[0]);
-    cam.start();     
+    cam.start();
   } 
 
 
@@ -133,7 +129,6 @@ String[] cameras = Capture.list();
   println("Welcome to ToonLoop ! The Live Stop Motion Animation Tool.");
   println(")c( Alexandre Quessy 2008");
   println("http://alexandre.quessy.net");
-  ghost=createImage(LOOP_WIDTH, LOOP_HEIGHT, RGB);
 }
 
 void draw() 
@@ -151,21 +146,20 @@ void draw()
 
     if (cam.available() == true) 
     {
+      //moved the cam reading here so that it does create the image just when the webcam is ready
       cam.read();
+      LOOP_WIDTH=width/2;
+      LOOP_HEIGHT=(width/2*cam.height)/cam.width;
+      image(cam, 0, 150, LOOP_WIDTH, LOOP_HEIGHT );
+
     }
-    //noTint(); // alpha 100%
-
-    // display image
-    //tint(255, 0, 255);
-    //image(cam, 0, 150, 1065, 750); //1371 1.428571429 
 
 
-    //sequences[currentSeq].tintFrame();  <--- an attempt to add an effect to the loop. Try to uncomment and laugh
-    image(cam, 0, 150, LOOP_WIDTH, LOOP_HEIGHT); //1371 1.428571429 
-
-    if (ghost!=null) {
-     tint(255, 126);
+    if (ghostEnabled==true) {
+      tint(255, 120);
       image(ghost, 0, 150, LOOP_WIDTH, LOOP_HEIGHT);
+    } else {
+      noTint();
     }
 
     // y is the height of the text for frames and sequence information
@@ -279,12 +273,12 @@ void saveMovie() {
         +"w"+LOOP_WIDTH+"h"+LOOP_HEIGHT
         +"__"+String.valueOf(year())
         +"_"+String.valueOf(month())
-          +"_"+String.valueOf(day())
-            +"__"+String.valueOf(hour())
-              +"_"+String.valueOf(minute())
-                + "_Seq" + String.format("%2d", currentSeq)
-                  + "_Frm" + String.format("%03d", i)
-                    + ".jpg";
+        +"_"+String.valueOf(day())
+        +"__"+String.valueOf(hour())
+        +"_"+String.valueOf(minute())
+        + "_Seq" + String.format("%2d", currentSeq)
+        + "_Frm" + String.format("%03d", i)
+        + ".jpg";
 
 
       println("saving to "+pic_name+" :");
@@ -326,18 +320,15 @@ void showInfo() {
 }
 
 void newGhost() {
-  
-  ghost.copy(cam, 0, 0, LOOP_WIDTH, LOOP_HEIGHT, 0, 0, LOOP_WIDTH, LOOP_HEIGHT);
-//(  image(ghost,0,0);
+  //  ghost.copy( cam , 0, 0, LOOP_WIDTH, LOOP_HEIGHT, 0, 0, LOOP_WIDTH, LOOP_HEIGHT);
+  ghost=createGraphics(LOOP_WIDTH, LOOP_HEIGHT);
+  ghost.beginDraw();
+  ghost.image(cam, 0, 0, LOOP_WIDTH, LOOP_HEIGHT);
+  ghost.endDraw();
+
   println("ghost");
 }
 
-void noGhost() {
-
-  image(cam, 0, 150, LOOP_WIDTH, LOOP_HEIGHT); //1371 1.428571429 
-  println("noghost");
-
-}
 
 //boolean sketchFullScreen() {
 //  return true;

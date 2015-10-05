@@ -55,11 +55,11 @@ void keyPressed()
   case 'g': // EFFECTS, TINT
     ghostEnabled = true;
     newGhost();
+   
     break;
 
   case 'h': // EFFECTS, TINT
     ghostEnabled = false;
-    noGhost();
     break;
     
     
