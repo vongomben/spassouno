@@ -53,8 +53,15 @@ void keyPressed()
     break;
 
   case 'g': // EFFECTS, TINT
+    ghostEnabled = true;
     newGhost();
     break;
+
+  case 'h': // EFFECTS, TINT
+    ghostEnabled = false;
+    noGhost();
+    break;
+    
     
   case 'q': // QUIT APPLICATION
     if (ENABLE_QUIT) {

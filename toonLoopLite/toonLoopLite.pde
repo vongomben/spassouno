@@ -46,8 +46,6 @@ int NUM_SEQUENCES = 10;
 // any clever apprach than this?
 // vongomben on October 5, 2015
 
-
-
 int LOOP_WIDTH = 800; //1280; //1024
 int LOOP_HEIGHT = 600; // 720;  //768
 
@@ -58,7 +56,6 @@ float SAVED_MESS_SIZE_RATIO = 0.5;
 int TEXT_FONT_SIZE = 32;
 boolean ENABLE_QUIT = false;
 int ONION_PEEL_ALPHA = 63;
-
 
 int currentSeq = 0;
 PFont font;
@@ -332,7 +329,14 @@ void newGhost() {
   
   ghost.copy(cam, 0, 0, LOOP_WIDTH, LOOP_HEIGHT, 0, 0, LOOP_WIDTH, LOOP_HEIGHT);
 //(  image(ghost,0,0);
-  
+  println("ghost");
+}
+
+void noGhost() {
+
+  image(cam, 0, 150, LOOP_WIDTH, LOOP_HEIGHT); //1371 1.428571429 
+  println("noghost");
+
 }
 
 //boolean sketchFullScreen() {
