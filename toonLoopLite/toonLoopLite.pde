@@ -36,6 +36,18 @@ Capture cam;
 
 int LOOP_MAX_NUM_FRAME = 500;
 int NUM_SEQUENCES = 10; 
+
+// Since Processing 3
+// size() can't receive variables
+// hence you have to edit yourself
+// the size parameters
+// by multiplying LOOP_WIDTH and LOOP_HEIGHT by 2
+// in the size() function
+// any clever apprach than this?
+// vongomben on October 5, 2015
+
+
+
 int LOOP_WIDTH = 800; //1280; //1024
 int LOOP_HEIGHT = 600; // 720;  //768
 
@@ -79,7 +91,8 @@ void setup()
   //size((int)(LOOP_WIDTH*2*WINDOW_SIZE_RATIO), (int)(LOOP_HEIGHT*2*WINDOW_SIZE_RATIO), OPENGL); 
 
   //  size(1280, 1000);
-  size(LOOP_WIDTH*2, LOOP_HEIGHT*2); 
+  //size(LOOP_WIDTH*2, LOOP_HEIGHT*2); 
+  size(1600, 1200);
   pg = createGraphics(LOOP_WIDTH, LOOP_HEIGHT);
 
   infoPage = loadImage("info.jpg"); 
@@ -93,18 +106,36 @@ void setup()
   // end of Mac or Windows 
   // UNCOMMENT If on GNU/Linux:
 
-  cam = new Capture(this, LOOP_WIDTH, LOOP_HEIGHT);
-  cam.start();
+  //cam = new Capture(this, LOOP_WIDTH, LOOP_HEIGHT);
+  //cam.start();
   //println("Cannot list cameras on GNU/Linux");
+
+String[] cameras = Capture.list();
+  
+  if (cameras.length == 0) {
+    println("There are no cameras available for capture.");
+    exit();
+  } else {
+    println("Available cameras:");
+    for (int i = 0; i < cameras.length; i++) {
+      println(cameras[i]);
+    }
+    
+    // The camera can be initialized directly using an 
+    // element from the array returned by list():
+    cam = new Capture(this, cameras[0]);
+    cam.start();     
+  } 
+
 
   // end of GNU/Linux
   for (int i = 0; i < sequences.length; i++) {
     sequences[i] = new ToonSequence();
   }
   font = loadFont("CourierNewPSMT-24.vlw");
-  //println("Welcome to ToonLoop ! The Live Stop Motion Animation Tool.");
-  //println(")c( Alexandre Quessy 2008");
-  //println("http://alexandre.quessy.net");
+  println("Welcome to ToonLoop ! The Live Stop Motion Animation Tool.");
+  println(")c( Alexandre Quessy 2008");
+  println("http://alexandre.quessy.net");
   ghost=createImage(LOOP_WIDTH, LOOP_HEIGHT, RGB);
 }
 
@@ -301,9 +332,9 @@ void newGhost() {
   
   ghost.copy(cam, 0, 0, LOOP_WIDTH, LOOP_HEIGHT, 0, 0, LOOP_WIDTH, LOOP_HEIGHT);
 //(  image(ghost,0,0);
+  
 }
 
 //boolean sketchFullScreen() {
 //  return true;
 //}
-
