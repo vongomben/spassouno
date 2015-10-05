@@ -90,6 +90,11 @@ void setup()
   //  size(1280, 1000);
   //size(LOOP_WIDTH*2, LOOP_HEIGHT*2); 
   size(1600, 1200);
+  
+  // added interesting resizable interface feature
+  // https://github.com/processing/processing/wiki/Changes-in-3.0#things-that-may-break-your-2x-sketches
+  surface.setResizable(true);
+
   pg = createGraphics(LOOP_WIDTH, LOOP_HEIGHT);
 
   infoPage = loadImage("info.jpg"); 
