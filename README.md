@@ -30,6 +30,8 @@ In its todays' confuguration, (S)passoUno offers the possiblity to
 * add some color and symmetry effects 
 * all pictures are saved, and possibly posted on spasso.uno 
 
+![alt tag](https://instagram.com/p/oqYufcxSmS/)
+
 # Descrizione Italiana
 (S)passoUno é uno strumento di animazione passo-uno live basato su [ToonLoop](http://www.toonloop.com/) (2009) di Alexandre Quessy. E' stato modificato, aggiornato e amato durante disparati workshop di Arduino e Processing tenuti da Davide Gomba e Mirco Piccin nel biennio 2012-2014. Il progetto si é rintanato nelle ospitali mura del [Fablab Torino](http://www.fablabtorino.org/) ed é diventato improvvisamente 'fisico'. 
 Lorenzo Romagnoli ha aggiunto diversi effetti tra i quali un qualcosa molto simile all'[Onion Skinning](https://en.wikipedia.org/wiki/Onion_skinning) e alla viratura. 
