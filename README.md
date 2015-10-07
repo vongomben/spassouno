@@ -16,6 +16,7 @@ Processing has changed a lot in the last years, so the version of ToonLoop progr
 latest libraries, bypassing the new video export of Processing as well as changing several stuff in sequence Array.  
 
 ---
+![Maker Faire Torino 2014, with Mirco Piccin and Djibril](https://scontent-mxp1-1.cdninstagram.com/hphotos-xfa1/t51.2885-15/e15/10354328_666302950109641_1329937969_n.jpg)
 
 # English Description
 
@@ -30,7 +31,7 @@ In its todays' confuguration, (S)passoUno offers the possiblity to
 * add some color and symmetry effects 
 * all pictures are saved, and possibly posted on spasso.uno 
 
-![alt tag](https://instagram.com/p/oqYufcxSmS/)
+
 
 # Descrizione Italiana
 (S)passoUno é uno strumento di animazione passo-uno live basato su [ToonLoop](http://www.toonloop.com/) (2009) di Alexandre Quessy. E' stato modificato, aggiornato e amato durante disparati workshop di Arduino e Processing tenuti da Davide Gomba e Mirco Piccin nel biennio 2012-2014. Il progetto si é rintanato nelle ospitali mura del [Fablab Torino](http://www.fablabtorino.org/) ed é diventato improvvisamente 'fisico'. 
