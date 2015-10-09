@@ -9,7 +9,7 @@ customized several times by Davide Gomba and Mirco Piccin in several Ardunio/Pro
 (S)passoUno waves his respect and legacy to ToonLoop, while being a physical implementation of it. 
 
 You can find instructions on how to build/customize your board,
- as well as adding an [Arduino Leonardo](http://arduino.cc/en/Main/ArduinoBoardLeonardo) 
+ as well as adding an [Arduino Micro](https://www.arduino.cc/en/Main/ArduinoBoardMicro) 
  playing as [HID](http://arduino.cc/en/Reference/MouseKeyboard) and some buttons as an interface.
 
 Processing has changed a lot in the last years, so the version of ToonLoop program is updated to the 

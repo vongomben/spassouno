@@ -84,7 +84,7 @@ long timer = 0;
 
 void setup() 
 {
-  fullScreen();
+  fullScreen(SPAN);
 
   pg = createGraphics(LOOP_WIDTH, LOOP_HEIGHT);
 
