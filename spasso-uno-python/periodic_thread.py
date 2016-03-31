@@ -1,79 +1,59 @@
 import logging
+from threading import Thread
 import threading
-
+import time
 
 class PeriodicThread(object):
     """
     Python periodic Thread using Timer with instant cancellation
     """
 
-    def __init__(self, callback=None, period=1, name=None, *args, **kwargs):
-        self.name = name
+    def __init__(self, callback=None, period=1,  *args, **kwargs):
         self.args = args
         self.kwargs = kwargs
         self.callback = callback
         self.period = period
-        self.stop = False
-        self.current_timer = None
+        self.stop = True
+        self.worker = None
         self.schedule_lock = threading.Lock()
+        self.worker = Thread(target=self._run, args=())
+        self.worker.setDaemon(True)
 
     def start(self):
-        """
-        Mimics Thread standard start method
-        """
-        self.schedule_timer()
+        if self.worker:
+            self.worker.start()
+            self.stop = False
+        return not self.stop
 
     def run(self):
-        """
-        By default run callback. Override it if you want to use inheritance
-        """
         if self.callback is not None:
             self.callback()
 
     def _run(self):
-        """
-        Run desired callback and then reschedule Timer (if thread is not stopped)
-        """
-        try:
-            self.run()
-        except Exception, e:
-            logging.exception("Exception in running periodic thread")
-        finally:
-            with self.schedule_lock:
-                if not self.stop:
-                    self.schedule_timer()
-
-    def schedule_timer(self):
-        """
-        Schedules next Timer run
-        """
-        self.current_timer = threading.Timer(self.period, self._run, *self.args, **self.kwargs)
-        if self.name:
-            self.current_timer.name = self.name
-        self.current_timer.start()
+        print "_run {0}".format(self.stop)
+        while not self.stop:
+            try:
+                self.run()
+                time.sleep(self.period)
+            except Exception, e:
+                logging.exception("Exception in running periodic thread")
 
     def change_period(self, period):
-        self.period = period
-        self.cancel()
-        self.schedule_timer()
+        with self.schedule_lock:
+            self.period = period
 
     def cancel(self):
-        """
-        Mimics Timer standard cancel method
-        """
         with self.schedule_lock:
             self.stop = True
-            if self.current_timer is not None:
-                self.current_timer.cancel()
+            if self.worker is not None:
+                while self.worker.is_alive():
+                    pass
+                self.worker = Thread(target=self._run, args=())
 
-    def join(self):
-        """
-        Mimics Thread standard join method
-        """
-        self.current_timer.join()
 
 if __name__ == '__main__':
     import time
+
     def cb():
         print "CB"
 

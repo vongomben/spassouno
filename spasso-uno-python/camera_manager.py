@@ -54,7 +54,7 @@ class Camera(object):
     def capture_to_file(self, file_name):
         stream = io.BytesIO()
         self._camera.capture(
-            stream, use_video_port=True, format='jpeg')
+            stream, use_video_port=False, format='jpeg')
         frame = Image.open(stream)
         frame.save(file_name, "JPEG")
 

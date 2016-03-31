@@ -3,6 +3,8 @@
 # Progetto: SpassoUno
 
 import time
+import shutil
+from decimal import Decimal
 
 from camera_manager import Camera
 from session_manager import SessionManager
@@ -14,13 +16,14 @@ __author__ = 'Fabrizio Guglielmino'
 
 
 class Keys(object):
-    UP_KEY = '\x1b[A'
-    DOWN_KEY = '\x1b[B'
-    SPACE_KEY = ' '
-    X_KEY = 'x'
-    M_KEY = 'm'
-    G_KEY = 'g'
-    Q_KEY = 'q'
+    UP_KEY = '\x1b[A'       # Decelerate preview
+    DOWN_KEY = '\x1b[B'     # Accelerate preview
+    SPACE_KEY = ' '         # Take a snapshot
+    X_KEY = 'x'             # Delete a frame
+    M_KEY = 'm'             # Make video
+    G_KEY = 'g'             # Make animated GIF
+    Q_KEY = 'q'             # Quit
+    D_KEY = 'd'             # Delete session (new session)
 
 
 class SpassoUno(object):
@@ -28,8 +31,8 @@ class SpassoUno(object):
     _session_manager = None
     _periodic_thread = None
     _is_running = False
-    _frame_delay = 1
-    DELAY_INCR_STEP = 0.2
+    _frame_delay = 1.0
+    DELAY_INCR_STEP = 0.1
 
     _functions = {}
 
@@ -71,6 +74,7 @@ class SpassoUno(object):
         self._functions[Keys.G_KEY] = self.__make_animated_GIF
         self._functions[Keys.UP_KEY] = self.__inc_prev_speed
         self._functions[Keys.DOWN_KEY] = self.__dec_prev_speed
+        self._functions[Keys.D_KEY] = self.__delete_cur_session
 
         self._functions[Keys.Q_KEY] = self.__quit_app
 
@@ -84,7 +88,7 @@ class SpassoUno(object):
         self._is_running = False
 
     def __capture_frame(self):
-        print "__capture_frame"
+        self._camera.annotate_text('')
         filename = self._session_manager\
             .current_session\
             .generate_file_name()
@@ -93,18 +97,17 @@ class SpassoUno(object):
 
         self.__show_frame(filename)
 
-
     def __inc_prev_speed(self):
-        self._camera.annotate_text("Inc")
-        if self._frame_delay - self.DELAY_INCR_STEP > 0:
+        if int(self._frame_delay * 10) > int(self.DELAY_INCR_STEP * 10):
             self._frame_delay -= self.DELAY_INCR_STEP
 
+        self._camera.annotate_text('Inc {0}'.format(self._frame_delay))
         self._periodic_thread.change_period(self._frame_delay)
 
     def __dec_prev_speed(self):
-        self._camera.annotate_text("Dec")
         self._frame_delay += self.DELAY_INCR_STEP
 
+        self._camera.annotate_text('Dec {0}'.format(self._frame_delay))
         self._periodic_thread.change_period(self._frame_delay)
 
     def __delete_last_frame(self):
@@ -116,14 +119,23 @@ class SpassoUno(object):
     def __make_animated_GIF(self):
         print "__makeAnimatedGIF"
 
+    def __delete_cur_session(self):
+        self._periodic_thread.cancel()
+        shutil.rmtree(self._session_manager.current_session.session_path)
+        self._session_manager.reset_cur_session()
+        self._periodic_thread.start()
+
     def __show_frame(self, image_name):
         return self._camera.show_frame(image_name)
 
     def __show_next_frame(self):
         img_iter = self._session_manager.current_session.get_img_iterator()
-        img = next(img_iter)
-        if img:
-            self.__show_frame(img)
+        if img_iter:
+            img = next(img_iter)
+            if img:
+                self.__show_frame(img)
+        else:
+            self.__show_frame('res/logo.jpg')
 
 if __name__ == '__main__':
     spasso1 = SpassoUno(SessionManager(), Camera(), PeriodicThread())

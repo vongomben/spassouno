@@ -17,6 +17,10 @@ class Session(object):
     def session_id(self):
         return self._session_id
 
+    @property
+    def session_path(self):
+        return self._relative_path
+
     def generate_file_name(self):
         """
         Generate the next filename (full path) to be used in capture
@@ -27,11 +31,14 @@ class Session(object):
         return '{0}/frame_{1}.jpg'.format(self._relative_path,self._img_count)
 
     def reset_counter(self):
+        self._session_iterator = None
         self._img_count = 0
 
     def get_img_iterator(self):
         if not self._session_iterator:
-            self._session_iterator = cycle(glob.glob(self._relative_path + '/*.jpg'))
+            files = glob.glob(self._relative_path + '/*.jpg')
+            if len(files) > 0:
+                self._session_iterator = cycle(files)
 
         return self._session_iterator
 

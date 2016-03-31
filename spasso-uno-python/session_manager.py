@@ -14,6 +14,10 @@ class SessionManager(object):
     def current_session(self):
         return self._sessions[self._session_index]
 
+    def reset_cur_session(self):
+        sess_id = self._sessions[self._session_index].session_id
+        self._sessions[self._session_index] = Session(sess_id)
+
     def first(self):
         self._session_index = 0
 
