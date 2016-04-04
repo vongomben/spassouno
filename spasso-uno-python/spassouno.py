@@ -48,7 +48,7 @@ class SpassoUno(object):
 
         logging.basicConfig(format='%(asctime)s %(levelname)-8s %(message)s',
                             datefmt='%m-%d %H:%M',
-                            filename='selfie-o-matic.log', level=logging.INFO)
+                            filename='app.log', level=logging.INFO)
 
         self.__map_key_methods()
 
