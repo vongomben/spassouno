@@ -1,14 +1,13 @@
 import io
 from PIL import Image
-
-from picamera.array import PiRGBArray
 from picamera import PiCamera
-
 from picamera.renderers import PiOverlayRenderer
-
+import logging
 
 class Camera(object):
     _overlay_rederer = None
+    _screen_w = 0
+    _screen_h = 0
 
     def __init__(self):
         self._camera = PiCamera()
@@ -33,9 +32,9 @@ class Camera(object):
         self._camera.hflip = True
         self._camera.vflip = False
 
-        w = self._camera.resolution[0] / 2
-        h = self._camera.resolution[1]
-        self._camera.resolution = (w, h)
+        self._screen_w = self._camera.resolution[0] / 2
+        self._screen_h = self._camera.resolution[1]
+        self._camera.resolution = (self._screen_w, self._screen_h)
 
     def annotate_text(self, text):
         self._camera.annotate_text = text
@@ -48,6 +47,19 @@ class Camera(object):
     def stop_preview(self):
         self._camera.stop_preview()
 
+    @property
+    def fullscreen(self):
+        return self._camera.preview.fullscreen
+
+    @fullscreen.setter
+    def fullscreen(self, value):
+        if value:
+            self._camera.resolution = (self._screen_w * 2, self._screen_h)
+        else:
+            self._camera.resolution = (self._screen_w, self._screen_h)
+
+        self._camera.preview.fullscreen = value
+
     def close(self):
         self._camera.close()
 
@@ -59,17 +71,33 @@ class Camera(object):
         frame.save(file_name, "JPEG")
 
     def show_frame(self, image_name):
-        img = Image.open(image_name)
+        try:
+            img = Image.open(image_name)
 
-        pad = Image.new('RGB', (
-            (((self._camera.resolution[0] * 2) + 31) // 32) * 32,
-            ((img.size[1] + 15) // 16) * 16,
-        ))
+            pad = Image.new('RGB', (
+                (((self._camera.resolution[0] * 2) + 31) // 32) * 32,
+                ((img.size[1] + 15) // 16) * 16,
+            ))
 
-        pad.paste(img, (self._camera.resolution[0], 0))
-        source = pad.tobytes()
-        if not self._overlay_rederer:
-            self._overlay_rederer = self._camera.add_overlay(pad.tobytes(), size=(self._camera.resolution[0] * 2,
-                                                                                  img.size[1]))
-        else:
-            self._overlay_rederer.update(source)
+            pad.paste(img, (self._camera.resolution[0], 0))
+            source = pad.tobytes()
+            if not self._overlay_rederer:
+                self._overlay_rederer = self._camera.add_overlay(pad.tobytes(), size=(self._camera.resolution[0] * 2,
+                                                                                      img.size[1]))
+            else:
+                self._overlay_rederer.update(source)
+        except:
+            logging.error("show_frame failed")
+
+    def zoom_reset(self):
+        if self._camera.zoom[1] < 1.0 and self._camera.zoom[2] < 1.0:
+            self._camera.zoom = (0.0, 0.0, 1.0, 1.0)
+
+    def zoom_in(self):
+
+        self._camera.zoom = (0.0, 0.0, self._camera.zoom[2] - 0.1, self._camera.zoom[3] - 0.1)
+
+    def zoom_out(self):
+
+        self._camera.zoom = (0.0, 0.0, self._camera.zoom[2] + 0.1, self._camera.zoom[3] + 0.1)
+

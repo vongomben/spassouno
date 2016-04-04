@@ -1,12 +1,9 @@
 import logging
 from threading import Thread
 import threading
-import time
+import traceback
 
 class PeriodicThread(object):
-    """
-    Python periodic Thread using Timer with instant cancellation
-    """
 
     def __init__(self, callback=None, period=1,  *args, **kwargs):
         self.args = args
@@ -36,7 +33,7 @@ class PeriodicThread(object):
                 self.run()
                 time.sleep(self.period)
             except Exception, e:
-                logging.exception("Exception in running periodic thread")
+                logging.error(traceback.format_exc())
 
     def change_period(self, period):
         with self.schedule_lock:
