@@ -28,7 +28,7 @@ class Session(object):
 
         self._session_iterator = None  # New file invalidate old interator
         self._img_count += 1
-        return '{0}/frame_{1}.jpg'.format(self._relative_path,self._img_count)
+        return '{0}/frame_{1}.jpg'.format(self._relative_path, self._img_count)
 
     def reset_counter(self):
         self._session_iterator = None
