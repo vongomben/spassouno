@@ -2,6 +2,7 @@ import os
 import glob
 from itertools import cycle
 
+
 class Session(object):
     _session_iterator = None
 

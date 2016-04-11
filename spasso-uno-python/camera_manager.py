@@ -1,8 +1,9 @@
 import io
 from PIL import Image
 from picamera import PiCamera
-from picamera.renderers import PiOverlayRenderer
+import traceback
 import logging
+
 
 class Camera(object):
     _overlay_rederer = None
@@ -81,13 +82,14 @@ class Camera(object):
 
             pad.paste(img, (self._camera.resolution[0], 0))
             source = pad.tobytes()
+
             if not self._overlay_rederer:
                 self._overlay_rederer = self._camera.add_overlay(pad.tobytes(), size=(self._camera.resolution[0] * 2,
                                                                                       img.size[1]))
             else:
                 self._overlay_rederer.update(source)
         except:
-            logging.error("show_frame failed")
+            logging.error(traceback.format_exc())
 
     def zoom_reset(self):
         if self._camera.zoom[1] < 1.0 and self._camera.zoom[2] < 1.0:
